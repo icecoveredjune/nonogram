@@ -1,9 +1,26 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {squares} from "../../consts";
+import digitRowsMaxLength from "../../helpers/digitRowsMaxLength";
+import digitColumnsMaxLength from "../../helpers/digitColumnsMaxLength";
+import mappingSquares from "../../helpers/mappingSquares";
+import objDeepClone from "../../helpers/objDeepClone";
+
+const digitRowMaxLength = digitRowsMaxLength();
+const digitColumnMaxLength = digitColumnsMaxLength();
+const mappedSquares = mappingSquares(digitRowMaxLength, digitColumnMaxLength);
 
 const initialState = {
+	canvasCtxAvailable: false,
 	squares,
-	value:0
+	squaresCopy: mappedSquares,
+	squaresMarkupHistory: {
+		past: [],
+		present: [],
+		future: [],
+	},
+	digitRowMaxLength,
+	digitColumnMaxLength,
+	value: 0,
 };
 
 export const appSlice = createSlice({
@@ -21,27 +38,41 @@ export const appSlice = createSlice({
 		decrement: (state) => {
 			state.value -= 1;
 		},
+		undo: (state) => {
+			console.log('undo')
+			state.squaresMarkupHistory.past.pop();
+		},
+		redo: (state) => {
+			console.log('redo')
+		},
+		clear: (state) => {
+			console.log('clear')
+		},
+		setSquares: (state, action) => {
+			for (const square of action.payload) {
+				state.squaresCopy[square.index].value = square.value;
+			}
+		},
+		saveMarkup: (state, action) => {
+			state.squaresMarkupHistory.present.push(objDeepClone(action.payload));
+			state.squaresMarkupHistory.past.push(objDeepClone(action.payload));
+		},
 		// Use the PayloadAction type to declare the contents of `action.payload`
 		incrementByAmount: (state, action) => {
 			state.value += action.payload;
 		},
+		setCanvasCtxIsAvailable: (state) => {
+			state.canvasCtxAvailable = true;
+		}
 	},
 });
-
-export const {increment, decrement, incrementByAmount} = appSlice.actions;
-
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state: RootState) => state.app.value)`
-export const selectCount = (state) => state.app.value;
-
-// We can also write thunks by hand, which may contain both sync and async logic.
-// Here's an example of conditionally dispatching actions based on current state.
-export const incrementIfOdd = (amount) => (dispatch, getState) => {
-	const currentValue = selectCount(getState());
-	if (currentValue % 2 === 1) {
-		dispatch(incrementByAmount(amount));
-	}
-};
-
+export const {
+	increment,
+	setSquares,
+	saveMarkup,
+	undo,
+	redo,
+	clear,
+	setCanvasCtxIsAvailable
+} = appSlice.actions;
 export default appSlice.reducer;
