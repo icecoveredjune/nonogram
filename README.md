@@ -7,5 +7,5 @@ vertical lines.
 0 define empty square, 1 - filled.
 <details> 
   <summary>Answer </summary>
-   ![Answer](https://i.imgur.com/3TCiqDk.jpg "Answer")
+   ![Answer](https://i.imgur.com/3TCiqDk.jpg)
 </details>
