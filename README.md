@@ -9,4 +9,3 @@ vertical lines.
   <summary>Answer </summary>
    ![Answer](https://i.imgur.com/3TCiqDk.jpg)
 </details>
-![Answer](https://i.imgur.com/3TCiqDk.jpg)
