@@ -1,6 +1,6 @@
 import React from 'react';
+import Nonogram from "../Nonogram/Nonogram";
 import styles from './App.module.css';
-import Nonogram from "./components/Nonogram";
 
 const App = () => {
 	return (

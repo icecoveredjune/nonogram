@@ -1,7 +1,3 @@
-/*
- TODO:
- 1) Надо ли отнимать единицу и морочиться с отступами, мб смена цветов контрольных линий помогла?
- * */
 import {squares, nonogramStrokeWidth, canvasStartingPoint, squareSize} from "../consts";
 
 /**
@@ -16,7 +12,7 @@ function mappingSquares(digitRowMaxLength, digitColumnMaxLength) {
 
 	for (let i = 0; i < squares.length; i++) {
 		/*
-		 increase started y coordinates by square size amount because we shifting by the end of each iteration to the left
+		 increase started y coordinates by square size amount because we're shifting by the end of each iteration to the left
 		 and down.
 		 * */
 		const y = startedY + i * squareSize;

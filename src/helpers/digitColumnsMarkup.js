@@ -2,7 +2,7 @@ import {squares} from "../consts";
 
 /**
  *
- * @returns {array} returns matrix like [[1,3],[4,1,1]...] to mark rows with digits
+ * @returns {array} matrix like [[1,3],[4,1,1]...] to mark rows with digits
  */
 export default function digitColumnsMarkup() {
 	const arr = [];
@@ -23,6 +23,5 @@ export default function digitColumnsMarkup() {
 			}
 		}
 	}
-	/*console.log('columns markup ', arr)*/
 	return arr;
 }

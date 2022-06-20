@@ -1,6 +1,6 @@
-import {canvasStartingPoint, nonogramStrokeWidth, squareSize} from "../consts";
-import digitRowsMaxLength from "../helpers/digitRowsMaxLength";
-import digitColumnsMaxLength from "../helpers/digitColumnsMaxLength";
+import digitRowsMaxLength from "../../helpers/digitRowsMaxLength";
+import digitColumnsMaxLength from "../../helpers/digitColumnsMaxLength";
+import {canvasStartingPoint, nonogramStrokeWidth, squareSize} from "../../consts";
 
 const DigitsBlockFiller = (props) => {
 	const context = props.canvasRef.current.getContext('2d');

@@ -1,6 +1,14 @@
-import digitRowsMarkup from "../helpers/digitRowsMarkup";
-import {digitsFontSize,squareStrokeWidth, digitsFont, digitsColor,canvasStartingPoint,nonogramStrokeWidth,squareSize} from "../consts";
 import {useSelector} from "react-redux";
+import digitRowsMarkup from "../../helpers/digitRowsMarkup";
+import {
+	digitsFontSize,
+	squareStrokeWidth,
+	digitsFont,
+	digitsColor,
+	canvasStartingPoint,
+	nonogramStrokeWidth,
+	squareSize,
+} from "../../consts";
 
 const DigitsInRowsDrawer = (props) => {
 	const context = props.canvasRef.current.getContext('2d');

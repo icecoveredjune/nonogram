@@ -1,19 +1,17 @@
-/*	TODO
- *	replace i in children map
- * */
-import React, {useEffect, useRef, useState} from "react";
-import {nonogramStrokeWidth, nonogramStrokeStyle, canvasStartingPoint, squareSize, squareStrokeWidth} from "../consts";
-import digitRowsMaxLength from "../helpers/digitRowsMaxLength";
-import digitColumnsMaxLength from "../helpers/digitColumnsMaxLength";
+import React, {useEffect, useState, cloneElement, forwardRef} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {cloneElement} from "react";
-import styles from "./Canvas.module.css";
-import {forwardRef} from "react";
-import {setCanvasCtxIsAvailable} from "../features/app/appSlice";
+import digitRowsMaxLength from "../../helpers/digitRowsMaxLength";
+import digitColumnsMaxLength from "../../helpers/digitColumnsMaxLength";
+import {setCanvasCtxIsAvailable} from "../../features/app/appSlice";
+import {
+	nonogramStrokeWidth,
+	nonogramStrokeStyle,
+	canvasStartingPoint,
+	squareSize,
+	squareStrokeWidth,
+} from "../../consts";
 
 const Canvas = forwardRef((props, ref) => {
-	console.log('Canvas');
-	/*const canvasRef = ref;*/
 	const squaresMarkup = useSelector(state => state.app.squares);
 	const squaresPerRow = squaresMarkup[0].length; // number of squares in a row
 	const squaresPerColumn = squaresMarkup.length; // number of squares in a column
@@ -30,8 +28,6 @@ const Canvas = forwardRef((props, ref) => {
 	};
 
 	useEffect(() => {
-		console.log('updated/mounted');
-		/*const canvas = canvasRef.current;*/
 		const context = ref.current.getContext('2d');
 
 		dispatch(setCanvasCtxIsAvailable());
@@ -41,7 +37,7 @@ const Canvas = forwardRef((props, ref) => {
 		context.strokeRect(canvasStartingPoint.x, canvasStartingPoint.y, nonogramWidth, nonogramHeight);
 	}, []);
 	return (
-		<div className={styles.canvasWrapper}>
+		<>
 			<canvas
 				ref={ref}
 				width="500px"
@@ -50,9 +46,9 @@ const Canvas = forwardRef((props, ref) => {
 			</canvas>
 			{renderChildren && props.children.map((child, i) => cloneElement(child, {
 				...childrenProps,
-				key: i,
+				key: i, // yeah, I know that index in key it's not right but children order is fixed
 			}))}
-		</div>
+		</>
 	);
 });
 export default Canvas;

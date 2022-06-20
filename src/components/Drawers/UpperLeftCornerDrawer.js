@@ -1,5 +1,5 @@
-import {nonogramStrokeWidth, nonogramStrokeStyle, canvasStartingPoint, squareSize} from "../consts";
 import {useSelector} from "react-redux";
+import {nonogramStrokeWidth, nonogramStrokeStyle, canvasStartingPoint, squareSize} from "../../consts";
 
 const UpperLeftCornerDrawer = (props) => {
 	const context = props.canvasRef.current.getContext('2d');

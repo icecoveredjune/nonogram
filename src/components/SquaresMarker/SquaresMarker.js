@@ -1,12 +1,17 @@
 import {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {saveMarkup, setSquares} from "../features/app/appSlice";
-import {squareSize, squareStrokeWidth, crossesCorrection} from "../consts";
-import defineCurrentSquare from "../helpers/defineCurrentSquare";
-import throttle from "../utils/throttle";
-/*import {store} from "../app/store";*/
-import {increment} from "../features/app/appSlice";
-import {store} from "../app/store";
+import {useDispatch, useStore} from "react-redux";
+import {squareSize, squareStrokeWidth, crossesCorrection} from "../../consts";
+import {
+	finishGame,
+	saveMove,
+	setSquares,
+	zeroingCurrentShift,
+	saveFilledIds,
+	deleteFilledIds,
+} from "../../features/app/appSlice";
+import defineCurrentSquare from "../../helpers/defineCurrentSquare";
+import gameIsFinished from "../../helpers/gameIsFinished";
+import throttle from "../../utils/throttle";
 
 const SquaresMarker = (props) => {
 	let mouseIsDown = false;
@@ -19,6 +24,7 @@ const SquaresMarker = (props) => {
 	const context = props.canvasRef.current.getContext('2d');
 	const fillSize = squareSize - squareStrokeWidth;
 	const dispatch = useDispatch();
+	const store = useStore();
 	const markSquares = (x, y) => {
 		const currentSquare = defineCurrentSquare(context, x, y);
 
@@ -46,7 +52,7 @@ const SquaresMarker = (props) => {
 					context.fillRect(currentSquare.x, currentSquare.y, fillSize, fillSize);
 				}
 				batch.push({
-					index: squareId,
+					id: squareId,
 					value,
 				});
 				break;
@@ -65,7 +71,7 @@ const SquaresMarker = (props) => {
 					context.closePath();
 				}
 				batch.push({
-					index: squareId,
+					id: squareId,
 					value,
 				});
 				break;
@@ -95,13 +101,44 @@ const SquaresMarker = (props) => {
 		markSquares(x, y);
 	};
 	const mouseUpHandler = () => {
+		const {
+			currentShift,
+			userFilledIds,
+		} = store.getState().app;
+		const idsToSave = [];
+		const idsToDelete = [];
+
+		if (currentShift !== 0) {
+			dispatch(zeroingCurrentShift());
+		}
 		mouseIsDown = false;
 		dispatch(setSquares(batch));
-		dispatch(saveMarkup(batch));
+		dispatch(saveMove(batch));
+		// iterate over users marked squares to save id's marked with value "1"
+		for (const square of batch) {
+			if (square.value === 1) {
+				if (!userFilledIds.includes(square.id)) {
+					idsToSave.push(square.id);
+				}
+			} else {
+				if (userFilledIds.includes(square.id)) {
+					idsToDelete.push(square.id);
+				}
+			}
+		}
+		if (idsToSave.length) {
+			dispatch(saveFilledIds(idsToSave));
+		}
+		if (idsToDelete.length) {
+			dispatch(deleteFilledIds(idsToDelete));
+		}
+		if (gameIsFinished()) {
+			dispatch(finishGame());
+		}
 		batch.length = 0;
 		squaresUnderEditId.length = 0;
+
 	};
-	console.log('SquaresMarker render');
 	useEffect(() => {
 		canvas.addEventListener('contextmenu', contextmenuHandler);
 		canvas.addEventListener('mousemove', mouseMoveHandler);
@@ -113,30 +150,8 @@ const SquaresMarker = (props) => {
 			canvas.removeEventListener('mousedown', mouseDownHandler);
 			canvas.removeEventListener('mouseup', mouseUpHandler);
 		};
-	}, []);
-	/*context.fillStyle = '#000';
-	 context.globalCompositeOperation = 'source-over'
-	 context.fillRect(139, 117, 20, 20);
-	 context.fillRect(161, 117, 20, 20);
-	 context.fillRect(203, 117, 20, 20);
-	 context.fillRect(205, 117, 20, 20);
-	 context.fillRect(227, 117, 20, 20);
-	 context.fillRect(249, 117, 20, 20);
-	 context.fillRect(271, 117, 20, 20);
-	 context.fillRect(293, 117, 20, 20);
-	 context.fillRect(315, 117, 20, 20);
-	 context.fillRect(337, 117, 20, 20);
-	 context.fillRect(359, 117, 20, 20);
-	 context.fillRect(381, 117, 20, 20);
-	 context.fillRect(403, 117, 20, 20);
-	 context.fillRect(425, 117, 20, 20);
+	});
 
-
-	 context.fillRect(447, 117, 20, 20);
-	 context.fillRect(447, 403, 20, 20);
-	 context.clearRect(447, 403, 20, 20)
-	 console.log(context.getContextAttributes())
-	 console.log(context)*/
 	return null;
 };
 export default SquaresMarker;

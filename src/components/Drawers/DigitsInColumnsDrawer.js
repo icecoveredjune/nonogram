@@ -1,12 +1,12 @@
-import digitColumnsMarkup from "../helpers/digitColumnsMarkup";
+import {useSelector} from "react-redux";
+import digitColumnsMarkup from "../../helpers/digitColumnsMarkup";
+import digitColumnsMaxLength from "../../helpers/digitColumnsMaxLength";
 import {
 	squareStrokeWidth,
 	canvasStartingPoint,
 	nonogramStrokeWidth,
 	squareSize,
-} from "../consts";
-import digitColumnsMaxLength from "../helpers/digitColumnsMaxLength";
-import {useSelector} from "react-redux";
+} from "../../consts";
 
 const DigitsInColumnsDrawer = (props) => {
 	const context = props.canvasRef.current.getContext('2d');
@@ -21,7 +21,6 @@ const DigitsInColumnsDrawer = (props) => {
 		 **/
 		const x = i * squareSize + canvasStartingPoint.x + nonogramStrokeWidth / 2 + digitRowMaxLength * squareSize;
 		const y = canvasStartingPoint.y - nonogramStrokeWidth + digitColumnMaxLength * squareSize;
-
 		/*
 		 *	moving from left to right (in canvas) and fill squares with digits until array elements are available
 		 *  starting from end to start in each sub-array

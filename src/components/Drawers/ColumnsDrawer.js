@@ -1,5 +1,5 @@
-import {canvasStartingPoint, nonogramStrokeWidth, squareSize,controlLineStrokeStyle} from "../consts";
 import {useSelector} from "react-redux";
+import {canvasStartingPoint, nonogramStrokeWidth, squareSize,controlLineStrokeStyle} from "../../consts";
 
 const ColumnsDrawer = (props) => {
 	const context = props.canvasRef.current.getContext('2d');

@@ -1,78 +1,112 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {squares} from "../../consts";
+import defineFilledSquaresIds from "../../helpers/defineFilledSquaresIds";
 import digitRowsMaxLength from "../../helpers/digitRowsMaxLength";
 import digitColumnsMaxLength from "../../helpers/digitColumnsMaxLength";
 import mappingSquares from "../../helpers/mappingSquares";
-import objDeepClone from "../../helpers/objDeepClone";
+import objDeepClone from "../../utils/objDeepClone";
+import {squares} from "../../consts";
 
 const digitRowMaxLength = digitRowsMaxLength();
 const digitColumnMaxLength = digitColumnsMaxLength();
 const mappedSquares = mappingSquares(digitRowMaxLength, digitColumnMaxLength);
-
+const filledIds = defineFilledSquaresIds();
 const initialState = {
-	canvasCtxAvailable: false,
+	canvasCtxIsAvailable: false,
+	showClearConfirmation: true,
+	gamePassed: false, // show if game complete right
+	filledIds, // initial id's of squares marked with value "1"
+	userFilledIds: [], // users marked id's with value "1"
 	squares,
+	moves: [], // user's moves history
+	currentShift: 0,
 	squaresCopy: mappedSquares,
-	squaresMarkupHistory: {
-		past: [],
-		present: [],
-		future: [],
-	},
 	digitRowMaxLength,
 	digitColumnMaxLength,
-	value: 0,
 };
 
 export const appSlice = createSlice({
 	name: 'app',
 	initialState,
-	// The `reducers` field lets us define reducers and generate associated actions
 	reducers: {
-		increment: (state) => {
-			// Redux Toolkit allows us to write "mutating" logic in reducers. It
-			// doesn't actually mutate the state because it uses the Immer library,
-			// which detects changes to a "draft state" and produces a brand new
-			// immutable state based off those changes
-			state.value += 1;
+		finishGame: (state) => {
+			state.gamePassed = true;
 		},
-		decrement: (state) => {
-			state.value -= 1;
+		toggleClearConfirmation: (state, action) => {
+			state.showClearConfirmation = action.payload;
 		},
 		undo: (state) => {
-			console.log('undo')
-			state.squaresMarkupHistory.past.pop();
-		},
-		redo: (state) => {
-			console.log('redo')
-		},
-		clear: (state) => {
-			console.log('clear')
-		},
-		setSquares: (state, action) => {
-			for (const square of action.payload) {
-				state.squaresCopy[square.index].value = square.value;
+			state.currentShift -= 1;
+			state.userFilledIds.length = 0;
+			const ids = state.moves.slice(0, state.currentShift - 1)
+				.flat(1)
+				.map(move => move.id);
+
+			for (const id of ids) {
+				state.userFilledIds.push(id);
 			}
 		},
-		saveMarkup: (state, action) => {
-			state.squaresMarkupHistory.present.push(objDeepClone(action.payload));
-			state.squaresMarkupHistory.past.push(objDeepClone(action.payload));
+		redo: (state) => {
+			state.currentShift += 1;
+			state.userFilledIds.length = 0;
+			const ids = state.moves.slice(0, state.moves.length + state.currentShift)
+				.flat(1)
+				.map(move => move.id);
+
+			for (const id of ids) {
+				state.userFilledIds.push(id);
+			}
 		},
-		// Use the PayloadAction type to declare the contents of `action.payload`
-		incrementByAmount: (state, action) => {
-			state.value += action.payload;
+		clearCanvas: (state) => {
+			state.moves.length = 0;
+			state.userFilledIds.length = 0;
+		},
+		saveFilledIds: (state, action) => {
+			for (const id of action.payload) {
+				state.userFilledIds.push(id);
+			}
+		},
+		deleteFilledIds: (state, action) => {
+			const newIds = state.userFilledIds.filter(id => !action.payload.includes(id));
+
+			state.userFilledIds = [...newIds];
+		},
+		setSquares: (state, action) => {
+			if (action.payload.length) {
+				for (const square of action.payload) {
+					state.squaresCopy[square.id].value = square.value;
+				}
+			}
+		},
+		saveMove: (state, action) => {
+			state.moves.push(objDeepClone(action.payload));
+		},
+		clearMovesHistory: (state) => {
+			state.moves.length = 0;
 		},
 		setCanvasCtxIsAvailable: (state) => {
-			state.canvasCtxAvailable = true;
-		}
+			state.canvasCtxIsAvailable = true;
+		},
+		zeroingCurrentShift: (state) => {
+			state.moves.splice(state.currentShift);
+			state.currentShift = 0;
+			state.userFilledIds.length = 0;
+			for (const move of state.moves) {
+				state.userFilledIds.push(move[0].id);
+			}
+		},
 	},
 });
 export const {
-	increment,
 	setSquares,
-	saveMarkup,
+	saveMove,
 	undo,
 	redo,
-	clear,
-	setCanvasCtxIsAvailable
+	clearCanvas,
+	finishGame,
+	zeroingCurrentShift,
+	setCanvasCtxIsAvailable,
+	toggleClearConfirmation,
+	saveFilledIds,
+	deleteFilledIds,
 } = appSlice.actions;
 export default appSlice.reducer;

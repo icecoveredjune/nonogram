@@ -23,6 +23,5 @@ export default function digitRowsMarkup() {
 			}
 		}
 	}
-	/*console.log('rows markup ',arr);*/
 	return arr;
 }

@@ -6,7 +6,7 @@ import {squareSize, nonogramStrokeWidth} from "../consts";
  * @param ctx	current canvas context
  * @param x	x coordinate
  * @param y	y coordinate
- * @returns {null|*}	object with clicked square info {id,x,y,value}
+ * @returns {null|*}	square info {id,x,y,value}
  */
 function defineCurrentSquare(ctx, x, y) {
 	const context = ctx;
@@ -22,7 +22,6 @@ function defineCurrentSquare(ctx, x, y) {
 
 	context.beginPath();
 	workspaceField.rect(workspaceStartX, workspaceStartY, workspaceWidth, workspaceHeight);
-
 	context.closePath();
 	if (context.isPointInPath(workspaceField, x, y)) {
 		currenSquareIndex = Math.trunc((x - workspaceStartX) / squareSize) + Math.trunc((y - workspaceStartY) / squareSize) * squaresPerRow;

@@ -1,9 +1,9 @@
-import {canvasStartingPoint, nonogramStrokeWidth, squareSize,controlLineStrokeStyle} from "../consts";
 import {useSelector} from "react-redux";
+import {canvasStartingPoint, nonogramStrokeWidth, squareSize, controlLineStrokeStyle} from "../../consts";
 
 const RowsDrawer = (props) => {
 	const context = props.canvasRef.current.getContext('2d');
-	const {nonogramWidth} = props;
+	const { nonogramWidth } = props;
 	const squaresMarkup = useSelector(state => state.app.squares);
 	const squaresPerColumn = squaresMarkup.length; // number of squares in a column
 	const digitColumnMaxLength = useSelector(state => state.app.digitColumnMaxLength);
@@ -31,5 +31,5 @@ const RowsDrawer = (props) => {
 		context.stroke();
 	}
 	return null;
-}
+};
 export default RowsDrawer;

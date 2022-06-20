@@ -1,4 +1,12 @@
 .wrapper {
   display: flex;
   justify-content: space-between;
+  width: 500px;
+  padding-left: 50px;
+}
+.wrapper button[disabled] {
+  opacity: 0.5;
+}
+.wrapper .modal button {
+  color: red !important;
 }
