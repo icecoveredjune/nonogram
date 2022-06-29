@@ -1,13 +1,13 @@
 import React, {useRef} from "react";
 import {useSelector} from "react-redux";
-import Canvas from "../Canvas/Canvas";
+import Canvas from "../Canvas";
 import ColumnsDrawer from "../Drawers/ColumnsDrawer";
-import ControlPanel from "../ControlPanel/ControlPanel";
-import DigitsBlockFiller from "../DigitsFiller/digitsBlockFiller";
+import ControlPanel from "../ControlPanel";
+import DigitsBlockFiller from "../DigitsFiller";
 import DigitsInColumnsDrawer from "../Drawers/DigitsInColumnsDrawer";
 import DigitsInRowsDrawer from "../Drawers/DigitsInRowsDrawer";
 import RowsDrawer from "../Drawers/RowsDrawer";
-import SquaresMarker from "../SquaresMarker/SquaresMarker";
+import SquaresMarker from "../SquaresMarker";
 import UpperLeftCornerDrawer from "../Drawers/UpperLeftCornerDrawer";
 
 const Nonogram = () => {

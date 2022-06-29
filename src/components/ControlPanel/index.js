@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {useDispatch, useSelector, useStore} from "react-redux";
 import {clearCanvas, redo, undo, toggleClearConfirmation} from "../../features/app/appSlice";
-import Modal from "../Modal/Modal";
+import Modal from "../Modal";
 import {setSquares} from "../../features/app/appSlice";
 import {backward, forward, clear, crossesCorrection} from "../../consts";
 import {squareSize, squareStrokeWidth} from "../../consts";
